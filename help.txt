@@ -1,0 +1,62 @@
+How to add credentials
+
+1. You can add credentials into the settings.xml of .m2 folder
+ like-
+	<servers>
+		<id>registry.hub.docker.com</id>
+		<username>YourUserName</username>
+		<password>YourPassword</password>
+	</server>
+
+2. You can add into pom.xml of the project
+ like - 
+	<configuration>
+                <to>
+                	<image>docker.io/docker6189/jib-docker-example</image>
+                	<auth>
+                		<username>YourUserName</username>
+                		<password>YourPassword</password>
+                	</auth>
+                </to>
+         </configuration>
+
+____________________________________________________________________________________________________
+More Details : https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#quickstart
+____________________________________________________________________________________________________
+--------------------------------------------------------------------------
+Commands
+
+1. To build docker image and push directly to the docker hub
+   >mvn clean compile jib:build
+
+2. To run the docker container directly from the docker hub
+   >docker run -p localPort:containerPort dockerRepoName/projectName
+
+   >docker run -p 8080:8080 docker6189/jib-docker-example
+   
+3. Build to Docker daemon(need docker install on locally)
+   >mvn compile jib:dockerBuild
+   
+4. Build an image tarball- You can build and save your image to disk as a tarball 
+   >mvn compile jib:buildTar 
+   saves your image to target/jib-image.tar and load into docker as - 
+   >docker load --input target/jib-image.tar
+   
+-----------------------------------------------------------------------------
+
+Bind to the lifecycle : add below code into pom.xml of the project
+
+<plugin>-----
+ <executions>
+    <execution>
+      <phase>package</phase>
+      <goals>
+        <goal>build</goal>
+      </goals>
+    </execution>
+  </executions>
+<plugin>
+   
+Then, you can build your container image by running:
+
+  >mvn package
